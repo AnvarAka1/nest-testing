@@ -1,33 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductEntity } from './product.entity';
+import { Product } from './entities/product';
 import { Repository } from 'typeorm';
-import { UserEntity } from '../users/user.entity';
-import { Image, ProductCreateDto, ProductUpdateDto } from './dto';
-import { ImageEntity } from '../images/image.entity';
+import { User } from '../users/user';
+import { ProductCreateDto, ProductUpdateDto } from './dto';
+import { ProductImage } from './entities/productImage';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectRepository(ProductEntity)
-    private readonly productsRepository: Repository<ProductEntity>,
-    @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>,
-    @InjectRepository(ImageEntity)
-    private readonly imageRepository: Repository<ImageEntity>,
+    @InjectRepository(Product)
+    private readonly productsRepository: Repository<Product>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+    @InjectRepository(ProductImage)
+    private readonly imageRepository: Repository<ProductImage>,
   ) {}
 
-  async create(product: ProductCreateDto): Promise<ProductEntity> {
-    const productEntity = new ProductEntity();
+  async create(product: ProductCreateDto): Promise<Product> {
+    const productEntity = new Product();
 
     const images = [];
     for (const image of product.images) {
-      const imageEntity = new ImageEntity();
-      imageEntity.path = image.path;
+      const productImageEntity = new ProductImage();
+      productImageEntity.path = image.path;
 
-      images.push(imageEntity);
+      images.push(productImageEntity);
 
-      await this.imageRepository.save(imageEntity);
+      await this.imageRepository.save(productImageEntity);
     }
 
     productEntity.title = product.title;
@@ -40,10 +40,7 @@ export class ProductsService {
     return await this.productsRepository.save(productEntity);
   }
 
-  async update(
-    productId: number,
-    product: ProductUpdateDto,
-  ): Promise<ProductEntity> {
+  async update(productId: number, product: ProductUpdateDto): Promise<Product> {
     const productEntity = await this.productsRepository
       .createQueryBuilder('product')
       .where('product.id = :id', { id: productId })
@@ -63,14 +60,14 @@ export class ProductsService {
     return await this.productsRepository.save(productEntity);
   }
 
-  async list(): Promise<ProductEntity[]> {
+  async list(): Promise<Product[]> {
     return await this.productsRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.user', 'user')
       .getMany();
   }
 
-  async detail(productId: number): Promise<ProductEntity> {
+  async detail(productId: number): Promise<Product> {
     return await this.productsRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.user', 'user')
@@ -78,7 +75,7 @@ export class ProductsService {
       .getOneOrFail();
   }
 
-  async _updateImages(productId: number, images: Image[]) {
+  async _updateImages(productId: number, images: ProductImage[]) {
     const existingImages = images.filter(({ id }) => id);
     const existingImageIds = existingImages.map(({ id }) => id);
 
@@ -94,14 +91,14 @@ export class ProductsService {
     await this.imageRepository
       .createQueryBuilder('image')
       .leftJoinAndSelect(`image.product`, 'product')
-      .update(ImageEntity)
+      .update(ProductImage)
       .set({ isDeleted: true })
       .where('product.id = :productId', { productId })
       .andWhere('image.id NOT IN (:imageIds)', { imageIds: existingImageIds })
       .execute();
 
     for (const newImage of newImages) {
-      const imageEntity = new ImageEntity();
+      const imageEntity = new ProductImage();
       imageEntity.path = newImage.path;
       imageEntity.isDefault = newImage.isDefault;
       existingImageEntity.push(imageEntity);

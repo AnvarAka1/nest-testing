@@ -1,15 +1,11 @@
-export type Image = {
-  id?: number;
-  path: string;
-  isDefault: boolean;
-};
+import { ProductImage } from '../entities/productImage';
 
 export type ProductCreateDto = {
   title: string;
   description: string;
   price: number;
   quantity: number;
-  images: Image[];
+  images: ProductImage[];
 };
 
 export type ProductUpdateDto = {
@@ -17,5 +13,5 @@ export type ProductUpdateDto = {
   description: string;
   price: number;
   quantity: number;
-  images: Image[];
+  images: ProductImage[];
 };

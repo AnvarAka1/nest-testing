@@ -5,10 +5,10 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ProductEntity } from '../products/product.entity';
+import { Product } from './product';
 
 @Entity()
-export class ImageEntity {
+export class ProductImage {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,8 +21,8 @@ export class ImageEntity {
   @Column({ default: false })
   isDeleted: boolean;
 
-  @ManyToOne(() => ProductEntity, (product) => product.images)
-  product: ProductEntity;
+  @ManyToOne(() => Product, (product) => product.images)
+  product: Product;
 
   @CreateDateColumn()
   createdAt: Date;

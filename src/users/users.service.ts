@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './user.entity';
+import { User } from './user';
 import { Repository } from 'typeorm';
 import { UserCreateDto, UserUpdateDto } from './dto';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
-  list(): Promise<UserEntity[]> {
+  list(): Promise<User[]> {
     return this.userRepository.createQueryBuilder('user').getMany();
   }
 
-  detail(userId: number): Promise<UserEntity> {
+  detail(userId: number): Promise<User> {
     return this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :userId', { userId })
@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   async create(user: UserCreateDto) {
-    const userEntity = new UserEntity();
+    const userEntity = new User();
     userEntity.firstName = user.firstName;
     userEntity.lastName = user.lastName;
 

@@ -6,10 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductEntity } from '../products/product.entity';
+import { Product } from '../products/entities/product';
 
 @Entity()
-export class UserEntity {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,8 +25,8 @@ export class UserEntity {
   @Column({ default: false })
   isDeleted: boolean;
 
-  @ManyToMany(() => ProductEntity, (product) => product.users)
-  products: ProductEntity[];
+  @ManyToMany(() => Product, (product) => product.users)
+  products: Product[];
 
   @CreateDateColumn()
   createdAt: Date;
