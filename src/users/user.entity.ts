@@ -22,6 +22,9 @@ export class UserEntity {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ default: false })
+  isDeleted: boolean;
+
   @ManyToMany(() => ProductEntity, (product) => product.users)
   products: ProductEntity[];
 

@@ -4,33 +4,33 @@ import { ProductEntity } from './product.entity';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private productService: ProductsService) {}
+  constructor(private productsService: ProductsService) {}
 
   @Get()
-  getList(): Promise<ProductEntity[]> {
+  list(): Promise<ProductEntity[]> {
     try {
-      return this.productService.list();
+      return this.productsService.list();
     } catch (e) {}
   }
 
   @Get(':id')
-  getDetail(@Param('id') id: number): Promise<ProductEntity> {
+  detail(@Param('id') id: number): Promise<ProductEntity> {
     try {
-      return this.productService.detail(id);
+      return this.productsService.detail(id);
     } catch (e) {}
   }
 
   @Post()
   create(@Body() product): Promise<ProductEntity> {
     try {
-      return this.productService.create(product);
+      return this.productsService.create(product);
     } catch (e) {}
   }
 
-  @Get()
+  @Get(':id')
   update(@Param('id') id: number, @Body() product): Promise<ProductEntity> {
     try {
-      return this.productService.update(id, product);
+      return this.productsService.update(id, product);
     } catch (e) {}
   }
 }

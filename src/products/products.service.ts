@@ -3,11 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './product.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
-import {
-  Image,
-  ProductCreateDto,
-  ProductUpdateDto,
-} from './dto';
+import { Image, ProductCreateDto, ProductUpdateDto } from './dto';
 import { ImageEntity } from '../images/image.entity';
 
 @Injectable()
